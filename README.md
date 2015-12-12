@@ -22,19 +22,6 @@ This repo provides a set of precompiled binaries to those who want to use get wh
 
 6. In the event something does fail, you will need to abort the script (as it performs absolutely zero error checking). You can do this by repeatedly mashing `CTRL+C` until it gives out
 
-### FAQ
-
-#### Why would I want to use this?
-For building your own [Operating System](http://wiki.osdev.org/Bare_Bones), of course!
-
-#### Why is Wine required?
-When your cross compiler has been generated, GCC's `Makefile` will attempt to extract some information from your new compiler by trying to execute it. As your compiler is not built for the system it is being compiled from (in this case, it is meant for Windows) the step will fail and `make` will be interrupted.
-
-While [some claim](http://permalink.gmane.org/gmane.comp.gcc.cross-compiling/15124) GCC actually creates two compilers during the compile process (one for the build system (your Linux OS), one for the host (Windows)), for me this did not appear to be the case. The workaround therefore is to either perform these steps manually, or update the `Makefile` so it is able to run without error. We do this by installing wine, and then telling the `Makefile` to use Wine to execute the required command.
-
-#### When running these steps manually I get an error 'GCC_NO_EXECUTABLES'
-The path to the compiler specified as `--host` to `configure` cannot be found on your `PATH`. Update your `.bashrc` and login/logout.
-
 ## Mac OS X
 
 Installing an i386-elf toolchain on Mac OS X is an outstandingly simple process, compared to Win32
@@ -47,3 +34,17 @@ Installing an i386-elf toolchain on Mac OS X is an outstandingly simple process,
 ## Linux
 
 Follow the instructions on the [OSDev Wiki](http://wiki.osdev.org/GCC_Cross-Compiler) or simply remove the `--host` argument to binutils, gcc and gdb's configure script in `i686-elf-tools.sh`
+
+## FAQ
+
+### Why would I want to use this?
+For building your own [Operating System](http://wiki.osdev.org/Bare_Bones), of course!
+
+### Why is Wine required?
+When your cross compiler has been generated, GCC's `Makefile` will attempt to extract some information from your new compiler by trying to execute it. As your compiler is not built for the system it is being compiled from (in this case, it is meant for Windows) the step will fail and `make` will be interrupted.
+
+While [some claim](http://permalink.gmane.org/gmane.comp.gcc.cross-compiling/15124) GCC actually creates two compilers during the compile process (one for the build system (your Linux OS), one for the host (Windows)), for me this did not appear to be the case. The workaround therefore is to either perform these steps manually, or update the `Makefile` so it is able to run without error. We do this by installing wine, and then telling the `Makefile` to use Wine to execute the required command.
+
+### When running these steps manually I get an error 'GCC_NO_EXECUTABLES'
+The path to the compiler specified as `--host` to `configure` cannot be found on your `PATH`. Update your `.bashrc` and login/logout.
+
