@@ -55,6 +55,13 @@ No. But you can try. I got all sorts of crazy errors I was simply unable to reso
 
 YMMV.
 
-### When running these steps manually and running `make` for binutils I get an error 'GCC_NO_EXECUTABLES'
+### Can I use `$DISTRO` instead of Ubuntu?
+I originally tried to use CentOS 7 64-bit, however along the way I encountered various issues potentially attributable to bitness, resulting in my switching to a 32-bit OS to simplify troubleshooting. CentOS 7 32-bit _cannot_ be used, as all the packages required by MXE are not available on yum. The ultimate showstopper however was I could not get Wine to execute my cross compiler (see above). Modifying Wine's bitness settings did not appear to resolve this.
+
+### When running these steps manually and running `make` for binutils I get an error _GCC_NO_EXECUTABLES_
 The path to the compiler specified as `--host` to `configure` cannot be found on your `PATH`. Update your `.bashrc` and login/logout.
 
+### When running these steps manually I get _i686-elf-gcc: command not found_
+This is caused by two bugs in the GCC Makefile
+1. The file `make` is looking for is called `xgcc`, not `i686-elf-gcc`
+2. See the section _Why is Wine required for Win32_ above
