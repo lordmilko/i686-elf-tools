@@ -49,7 +49,7 @@ While [some claim](http://permalink.gmane.org/gmane.comp.gcc.cross-compiling/151
 The Win32 procedure does not; as of yet I have been unable to get `make all-target-libgcc` to work properly. I am unable to comment in regards to the Mac OS X and Linux procedures (though I would imagine you should have no troubles on Linux, as you are not targeting Windows)
 
 ### Can I use MSYS/MSYS2/MinGW/MinGW/MinGW-w32/MinGW-w64/Cygwin, etc to do this?
-No. But you can try. I have successfully compiled on Windows in the past, however there have been two issues with this:
+No. But you can try. I got all sorts of crazy errors I was simply unable to resolve when I was looking at solutions on how to compile these tools. I have successfully compiled on Windows in the past, however there have been two issues with this:
 * Executables had dependencies on MinGW/Cygwin libraries (most likely as I just didn't know how to statically link)
 * GDB would randomly quit whenever I tried to type a command
 
