@@ -24,6 +24,9 @@ This repo provides a set of precompiled binaries to those who want to use get wh
 
 ### FAQ
 
+### Why would I want to use this?
+For building your own [Operating System](http://wiki.osdev.org/Bare_Bones), of course!
+
 #### Why is Wine required?
 When your cross compiler has been generated, GCC's `Makefile` will attempt to extract some information from your new compiler by trying to execute it. As your compiler is not built for the system it is being compiled from (in this case, it is meant for Windows) the step will fail and `make` will be interrupted.
 
