@@ -27,7 +27,7 @@ This repo provides a set of precompiled binaries to those who want to use get wh
 #### Why is Wine required?
 When your cross compiler has been generated, GCC's `Makefile` will attempt to extract some information from your new compiler by trying to execute it. As your compiler is not built for the system it is being compiled from (in this case, it is meant for Windows) the step will fail and `make` will be interrupted.
 
-While [some claim](http://permalink.gmane.org/gmane.comp.gcc.cross-compiling/15124) GCC actually creates two compilers during the compile process (one for the build system (your Linux OS), one for the host (Windows), for me this did not appear to be the case. The workaround therefore is to either perform these steps manually, or update the `Makefile` so it is able to run without error. We do this by installing wine, and then telling the `Makefile` to use Wine to execute the required command.
+While [some claim](http://permalink.gmane.org/gmane.comp.gcc.cross-compiling/15124) GCC actually creates two compilers during the compile process (one for the build system (your Linux OS), one for the host (Windows)), for me this did not appear to be the case. The workaround therefore is to either perform these steps manually, or update the `Makefile` so it is able to run without error. We do this by installing wine, and then telling the `Makefile` to use Wine to execute the required command.
 
 #### When running these steps manually I get an error 'GCC_NO_EXECUTABLES'
 The path to the compiler specified as `--host` to `configure` cannot be found on your `PATH`. Update your `.bashrc` and login/logout.
