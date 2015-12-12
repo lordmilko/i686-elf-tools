@@ -24,7 +24,7 @@ This repo provides a set of precompiled binaries to those who want to use get wh
 
 ### FAQ
 
-### Why would I want to use this?
+#### Why would I want to use this?
 For building your own [Operating System](http://wiki.osdev.org/Bare_Bones), of course!
 
 #### Why is Wine required?
