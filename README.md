@@ -45,6 +45,16 @@ When your cross compiler has been generated, GCC's `Makefile` will attempt to ex
 
 While [some claim](http://permalink.gmane.org/gmane.comp.gcc.cross-compiling/15124) GCC actually creates two compilers during the compile process (one for the build system (your Linux OS), one for the host (Windows)), for me this did not appear to be the case. The workaround therefore is to either perform these steps manually, or update the `Makefile` so it is able to run without error. We do this by installing wine, and then telling the `Makefile` to use Wine to execute the required command.
 
+### Does this include libgcc?
+The Win32 procedure does not; as of yet I have been unable to get `make all-target-libgcc` to work properly. I am unable to comment in regards to the Mac OS X and Linux procedures (though I would imagine you should have no troubles on Linux, as you are not targeting Windows)
+
+### Can I use MSYS/MSYS2/MinGW/MinGW/MinGW-w32/MinGW-w64/Cygwin, etc to do this?
+No. But you can try. I have successfully compiled on Windows in the past, however there have been two issues with this:
+* Executables had dependencies on MinGW/Cygwin libraries (most likely as I just didn't know how to statically link)
+* GDB would randomly quit whenever I tried to type a command
+
+YMMV.
+
 ### When running these steps manually and running `make` for binutils I get an error 'GCC_NO_EXECUTABLES'
 The path to the compiler specified as `--host` to `configure` cannot be found on your `PATH`. Update your `.bashrc` and login/logout.
 
