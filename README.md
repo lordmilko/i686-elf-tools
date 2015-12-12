@@ -63,5 +63,6 @@ The path to the compiler specified as `--host` to `configure` cannot be found on
 
 ### When running these steps manually I get _i686-elf-gcc: command not found_
 This is caused by two bugs in the GCC Makefile
+
 1. The file `make` is looking for is called `xgcc`, not `i686-elf-gcc`
 2. See the section _Why is Wine required for Win32_ above
