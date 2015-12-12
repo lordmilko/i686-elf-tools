@@ -58,6 +58,8 @@ YMMV.
 ### Can I use `$DISTRO` instead of Ubuntu?
 I originally tried to use CentOS 7 64-bit, however along the way I encountered various issues potentially attributable to bitness, resulting in my switching to a 32-bit OS to simplify troubleshooting. CentOS 7 32-bit _cannot_ be used, as all the packages required by MXE are not available on yum. The ultimate showstopper however was I could not get Wine to execute my cross compiler (see above). Modifying Wine's bitness settings did not appear to resolve this.
 
+If you are determined not to use Ubuntu (or another Debian derivitive), please see the [prerequisites for MXE](http://mxe.cc/#requirements). Note: you may need additional packages to these to successfully compile gcc, e.g. _texinfo_, _readline-devel_, etc. Google any error messages you get to reveal the appropriate package you need to install.
+
 ### When running these steps manually and running `make` for binutils I get an error _GCC_NO_EXECUTABLES_
 The path to the compiler specified as `--host` to `configure` cannot be found on your `PATH`. Update your `.bashrc` and login/logout.
 
