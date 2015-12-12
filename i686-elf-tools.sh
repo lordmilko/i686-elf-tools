@@ -37,23 +37,26 @@ tar -xvf gdb-$GDB_VERSION.tar.gz
 # You can also download these separately, and specify their locations as arguments to ./configure
 cd gcc-$GCC_VERSION
 ./contrib/download_prerequisites
+cd ..
 
 # Binutils
 
 mkdir build-binutils-$BINUTILS_VERSION
-cd ../build-binutils-$BINUTILS_VERSION
+cd build-binutils-$BINUTILS_VERSION
 ../binutils-$BINUTILS_VERSION/configure --host=i686-w64-mingw32.static --target=i686-elf --with-sysroot --disable-nls --disable-werror
 make
 sudo make install
+cd ..
 
 # GCC
 
 mkdir build-gcc-$GCC_VERSION
-cd ../build-gcc-$GCC_VERSION
-sed -i 's:$(GCC_FOR_TARGET) -dumpspecs > tmp-specs: wine ./xgcc$(exeext) -dumpspecs > tmp-specs:g' gcc/Makefile
+cd build-gcc-$GCC_VERSION
 ../gcc-$GCC_VERSION/configure --host=i686-w64-mingw32.static --target=i686-elf --disable-nls --enable-languages=c,c++ --without-headers
+sed -i 's:$(GCC_FOR_TARGET) -dumpspecs > tmp-specs: wine ./xgcc$(exeext) -dumpspecs > tmp-specs:g' gcc/Makefile
 make all-gcc
 sudo make install-gcc
+cd ..
 
 # GDB
 
