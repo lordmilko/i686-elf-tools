@@ -51,7 +51,7 @@ When your cross compiler has been generated, GCC's `Makefile` will attempt to ex
 While [some claim](http://permalink.gmane.org/gmane.comp.gcc.cross-compiling/15124) GCC actually creates two compilers during the compile process (one for the build system (your Linux OS), one for the host (Windows)), for me this did not appear to be the case. The workaround therefore is to either perform these steps manually, or update the `Makefile` so it is able to run without error. We do this by installing wine, and then telling the `Makefile` to use Wine to execute the required command.
 
 ### Does this include libgcc?
-The Win32 procedure does not; as of yet I have been unable to get `make all-target-libgcc` to work properly. I am unable to comment in regards to the Mac OS X and Linux procedures (though I would imagine you should have no troubles on Linux, as you are not targeting Windows)
+The Win32 procedure does not; as of yet I have been unable to get `make all-target-libgcc` to work properly. Mac OS X has no issues with libgcc; I assume Linux should have no issues either (as you are not targeting Windows)
 
 ### Can I use MSYS/MSYS2/MinGW/MinGW/MinGW-w32/MinGW-w64/Cygwin, etc to do this?
 No. But you can try. I got all sorts of crazy errors I was simply unable to resolve when I was looking at solutions to compile these tools. I have successfully compiled on Windows in the past, however there have been two issues with this:
