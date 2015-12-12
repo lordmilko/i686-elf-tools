@@ -1,9 +1,9 @@
 # i686-elf-tools
-## Win32
 Cross compiling an i386- or i686-elf Win32 toolchain is an outstandingly complicated and painful process. Both Binutils and GCC fail to properly articulate the extent of software dependencies required to build them, resulting in a litany of spurious and confusing error messages being emitted during the compilation process. Even once you do have the required software dependencies in place, you will still run into roadblocks due to bugs in how GCC performs [canadian cross compilation](https://en.wikipedia.org/wiki/Cross_compiler#Canadian_Cross).
 
 This repo provides a set of precompiled binaries to those who want to use get what they came for and move on (an i686-elf toolchain that, unlike others on the internet, includes cc1 and GDB), as well as a set of instructions for those that would like to build these things themselves. Also featured are a set of instructions for those that wich to install these tools on Mac OS X or Linux.
 
+## Win32
 ### Tutorial
 
   By default, `i686-elf-tools.sh` will download GCC 5.3.0, Binutils 2.25 and GDB 7.10. If you would like to change these versions, open the script in your favourite text editor and change the values of `BINUTILS_VERSION`, `GCC_VERSION` and `GDB_VERSION`. Instead of using MinGW32 or MinGW64, [MXE](http://mxe.cc) is used, providing us with an awesome Win32 toolchain that always produces statically linked binaries that just work (and don't need random MinGW DLLs).
