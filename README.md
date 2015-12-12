@@ -18,7 +18,7 @@ This repo provides a set of precompiled binaries to those who want to use get wh
 
 4. Run the script: `./i686-elf-tools.sh`
 
-5. If the stars are aligned, everything will go smoothly and after a little while you will have a brand spanking new cross compiler. All required files will automatically be zipped up to an archive `i686-elf-tools.zip` in your current directory. Copy these over to Windows with WinSCP (or your favourite program), unzip, and you should be good to go
+5. If the stars are aligned, everything will go smoothly and after a little while you will have a brand spanking new cross compiler. All required files will automatically be zipped up to an archive `i686-elf-tools.zip` in your home directory. Copy these over to Windows with WinSCP (or your favourite program), unzip, and you should be good to go
 
 6. In the event something does fail, you will need to abort the script (as it performs absolutely zero error checking). You can do this by repeatedly mashing `CTRL+C` until it gives out
 
