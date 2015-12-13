@@ -5,6 +5,8 @@ BINUTILS_VERSION=2.25
 GCC_VERSION=5.3.0
 GDB_VERSION=7.10
 
+set -e
+
 # MXE
 
 export PATH=/opt/mxe/usr/bin:$PATH
@@ -53,7 +55,7 @@ cd ..
 mkdir build-gcc-$GCC_VERSION
 cd build-gcc-$GCC_VERSION
 ../gcc-$GCC_VERSION/configure --host=i686-w64-mingw32.static --target=i686-elf --disable-nls --enable-languages=c,c++ --without-headers
-sed -i 's:$(GCC_FOR_TARGET) -dumpspecs > tmp-specs: wine ./xgcc$(exeext) -dumpspecs > tmp-specs:g' gcc/Makefile
+sed -i 's:$(GCC_FOR_TARGET) -dumpspecs > tmp-specs: wine ./xgcc$(exeext) -dumpspecs > tmp-specs:g' ../gcc-$GCC_VERSION/gcc/Makefile.in
 make all-gcc
 sudo make install-gcc
 cd ..
