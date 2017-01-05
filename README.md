@@ -3,7 +3,7 @@ Cross compiling an i386- or i686-elf Win32 toolchain is an outstandingly complic
 
 This repo provides a set of precompiled binaries to those who want to use get what they came for and move on (an i686-elf toolchain that, unlike others on the internet, includes cc1 and GDB), as well as a set of instructions for those that would like to build these things themselves. Also featured are a set of instructions for those that wich to install these tools on Mac OS X or Linux.
 
-**Note: as the Win32 procedure does not support compiling libgcc, you should avoid following these steps until this guide has been updated (unless you think you can figure it out yourself)**
+**Note: as the Win32 procedure does not support compiling libgcc, you should avoid following these steps until this guide has been updated (unless you think you can figure it out yourself). If you don't plan on using functions in libgcc, this probably doesn't matter.**
 
 ## Win32
 ### Tutorial
