@@ -33,8 +33,8 @@ function main {
         compileAll "linux"
     fi
     
-    if [[ $args == *"win"* ]]; then
-        echoColor "Skipping compiling linux as 'linux' was specified in commandline args '$args'"
+    if [[ $args == *"linux"* ]]; then
+        echoColor "Skipping compiling windows as 'linux' was specified in commandline args '$args'"
     else    
         compileAll "windows"
     fi
