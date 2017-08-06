@@ -3,6 +3,8 @@ Cross compiling an i386- or i686-elf Win32 toolchain is an outstandingly complic
 
 This repo provides a set of precompiled binaries to those who want to use get what they came for and move on (an i686-elf toolchain that, **unlike others on the internet, includes cc1 and GDB**), as well as a set of instructions for those that would like to build these things themselves. Also featured are a set of instructions for those that wich to install these tools on Mac OS X or Linux.
 
+[Pre-compiled binaries can be found here!](https://github.com/lordmilko/i686-elf-tools/releases)
+
 ## Win32
 ### Tutorial
 
@@ -117,4 +119,4 @@ Attempting to trick the makefile by creating shell scripts on your path named af
 
 The solution to this therefore is to first compile a linux i686-elf toolchain, followed by the MinGW32 toolchain we're actually interested in. This helps solve other bugs in the compilation process, such as GCC attempting to perform selftests on your MinGW32 cross compiler (which won't work) yet looking for i686-elf-gcc instead (which wouldn't exist).
 
-One would expect libgcc would have host=<the actual host> instead of i686-elf and thus generate a file `libgcc.dll` for mingw32, but from what I've found that doesn't appear to be the case. If you do have issues with GCC not interfacing with libgcc properly, let me know!
+One would expect libgcc would have host=&lt;the actual host&gt; instead of i686-elf and thus generate a file `libgcc.dll` for mingw32, but from what I've found that doesn't appear to be the case. If you do have issues with GCC not interfacing with libgcc properly, let me know!
