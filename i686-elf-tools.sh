@@ -19,8 +19,6 @@ else
         args=$@
 fi
 
-
-
 function main {
 
     installPackages
@@ -239,14 +237,6 @@ function compileGCC {
         echoColor "        Installing libgcc (libgcc_install.log)"
         sudo make install-target-libgcc >> libgcc_install.log
         
-        
-        
-        
-        #instead of compiling libgcc the way we're doing, what if we tried to manually run its configure script and specified the host as i686-w64-mingw32.static?
-        
-
-        
-
         cd ..
     else
         echoColor "    Skipping gcc [$1] as 'gcc' was ommitted from commandline args '$args'"
@@ -288,10 +278,17 @@ function compileGDB {
 function finalize {
     if [[ $args == *"zip"* ]]; then
         echo "Zipping everything up!"
-        cd $BUILD_DIR/windows/output
-        zip -r $BUILD_DIR/i686-elf-tools-windows.zip *
-        cd $BUILD_DIR/linux/output
-        zip -r $BUILD_DIR/i686-elf-tools-linux.zip *
+        
+        if [[ -d "$BUILD_DIR/windows/output" ]]; then
+            cd $BUILD_DIR/windows/output
+            zip -r $BUILD_DIR/i686-elf-tools-windows.zip *
+        fi
+        
+        if [[ -d "$BUILD_DIR/linux/output" ]]; then
+            cd $BUILD_DIR/linux/output
+            zip -r $BUILD_DIR/i686-elf-tools-linux.zip *
+        fi
+        
         echo -e "\e[92mZipped everything to $BUILD_DIR/i686-elf-tools-[windows | linux].zip\e[39m"
     else
         echoColor "    Skipping zipping 'zip' was ommitted from commandline args '$args'"
