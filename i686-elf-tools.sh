@@ -120,12 +120,8 @@ function downloadAndExtract {
     else
         echoColor "        $name-$version.tar.gz already exists"
     fi
-    
-    if [ ! -f linux ]
-    then
-        mkdir -p linux
-    fi
-    
+
+    mkdir -p linux
     cd linux
     
     if [ ! -d $name-$version ]
@@ -138,11 +134,7 @@ function downloadAndExtract {
     
     cd ..
     
-    if [ ! -f windows ]
-    then
-        mkdir -p windows
-    fi
-    
+    mkdir -p windows
     cd windows
     
     if [ ! -d $name-$version ]
