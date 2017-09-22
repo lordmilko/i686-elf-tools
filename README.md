@@ -96,7 +96,7 @@ No. But you can try. I got all sorts of crazy errors I was simply unable to reso
 YMMV.
 
 ### Can I use `$DISTRO` instead of Debian?
-I originally tried to use CentOS 7 64-bit, however along the way I encountered various issues potentially attributable to bitness, resulting in my switching to a 32-bit OS to simplify troubleshooting. CentOS 7 32-bit _cannot_ be used, as all the packages required by MXE are not available on yum. The ultimate showstopper however was I could not get Wine to execute my cross compiler (see above). Modifying Wine's bitness settings did not appear to resolve this.
+I originally tried to use CentOS 7 64-bit, however along the way I encountered various issues potentially attributable to bitness, resulting in my switching to a 32-bit OS to simplify troubleshooting. CentOS 7 32-bit _cannot_ be used, as all the packages required by MXE are not available on yum.
 
 If you are determined not to use Debian (or another Debian derivitive), please see the [prerequisites for MXE](http://mxe.cc/#requirements). Note: you may need additional packages to these to successfully compile gcc, e.g. _texinfo_, _readline-devel_, etc. Google any error messages you get to reveal the appropriate package you need to install.
 
