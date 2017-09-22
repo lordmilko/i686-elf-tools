@@ -113,7 +113,7 @@ You can try and hack the GCC makefile to execute `wine ./xgcc.exe` instead, howe
 
 ### How on earth did you compile libgcc?
 
-One does not simply `make all-target-libgcc` for `host=MinGW32`. The reason for this is that when libgcc is configured, both its target *and* host are set to **i686-elf**. As a result, libgcc's makefile will look for a *host=linux, target=1686-elf* `1686-elf-gcc`, will only find your MinGW32 `i686-elf-gcc.exe` from your previous `make all-gcc` (which it obviously can't execute) and thus will fail.
+One does not simply `make all-target-libgcc` for `host=MinGW32`. The reason for this is that when libgcc is configured, both its target *and* host are set to **i686-elf**. As a result, libgcc's makefile will look for a *host=linux, target=1686-elf* `i686-elf-gcc`, will only find your MinGW32 `i686-elf-gcc.exe` from your previous `make all-gcc` (which it obviously can't execute) and thus will fail.
 
 Attempting to trick the makefile by creating shell scripts on your path named after the missing binaries that internally invoke `wine <mingw32 version>` does not work (you get strange errors on during compilation).
 
