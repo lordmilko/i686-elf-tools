@@ -1,7 +1,7 @@
 # i686-elf-tools
 Cross compiling an i386- or i686-elf Win32 toolchain is an outstandingly complicated and painful process. Both Binutils and GCC fail to properly articulate the extent of software dependencies required to build them, resulting in a litany of spurious and confusing error messages being emitted during compilation. Even once you do have the required software dependencies in place, you will still run into roadblocks due to anomalies in how GCC performs cross compilation.
 
-This repo provides a set of precompiled binaries to those who want to use get what they came for and move on (an i686-elf toolchain that, **unlike others on the internet, includes cc1 and GDB**), as well as a set of instructions for those that would like to build these things themselves. Also featured are a set of instructions for those that wich to install these tools on Mac OS X or Linux.
+This repo provides a set of precompiled binaries to those who want to use get what they came for and move on (an i686-elf toolchain that, **unlike others on the internet, includes cc1 and GDB**), as well as a set of instructions for those that would like to build these things themselves. Also featured are a set of instructions for those that wish to install these tools on Mac OS X or Linux.
 
 [Pre-compiled binaries can be found here!](https://github.com/lordmilko/i686-elf-tools/releases)
 
