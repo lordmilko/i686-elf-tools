@@ -18,7 +18,7 @@ If you would like to change these versions, open the script in your favourite te
 
 Note: if you already have MXE installed, `i686-elf-tools.sh` won't add MXE to your PATH. Please ensure the MXE bin folder is on your path, else you will experience issues during compilation.
 
-1. Install a 32-bit (i386) version of Debian. This procedure was performed on top of the CD version of [Debian 9 i386](https://cdimage.debian.org/debian-cd/current/i386/iso-cd/debian-9.0.0-i386-xfce-CD-1.iso)
+1. Install a 32-bit (i386) version of Debian. This procedure was performed on top of the CD version of [Debian 9 i386](http://cdimage.debian.org/cdimage/archive/9.0.0/i386/iso-cd/debian-9.0.0-i386-xfce-CD-1.iso)
 
 2. Remove the CD-ROM source from `/etc/apt/sources.list` (if applicable)
 
