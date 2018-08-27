@@ -22,7 +22,16 @@ Note: if you already have MXE installed, `i686-elf-tools.sh` won't add MXE to yo
 
 2. Remove the CD-ROM source from `/etc/apt/sources.list` (if applicable)
 
-3. Run the following commands. `sudo -s` is optional, however if you are not running as root you will get repeated password request prompts during the course of the execution
+3. If you are running a newer version of Ubuntu, you may need to modify to your sources list to include `universe` and `multiverse` in addition to `main`
+
+   ```diff
+   -deb http://archive.ubuntu.com/ubuntu bionic main
+   +deb http://archive.ubuntu.com/ubuntu bionic main universe multiverse
+   deb http://archive.ubuntu.com/ubuntu bionic-security main
+   deb http://archive.ubuntu.com/ubuntu bionic-updates main
+   ```
+
+4. Run the following commands. `sudo -s` is optional, however if you are not running as root you will get repeated password request prompts during the course of the execution
 
     ```sh
     sudo -s
@@ -31,7 +40,7 @@ Note: if you already have MXE installed, `i686-elf-tools.sh` won't add MXE to yo
     ./i686-elf-tools.sh
     ```
 
-4. When the script completes you will have two zip files containing your i686-elf toolchain
+5. When the script completes you will have two zip files containing your i686-elf toolchain
 
     * `~/build-i686-elf/i686-elf-tools-windows.zip`
     * `~/build-i686-elf/i686-elf-tools.linux.zip`
