@@ -69,7 +69,7 @@ function installMXE {
         echo "export PATH=/opt/mxe/usr/bin:$PATH" >> ~/.bashrc
         export PATH=/opt/mxe/usr/bin:$PATH
     else
-       echoColor "    mxe is already installed. You'd better make sure /opt/mxe/usr/bin is on your path!"
+       echoColor "    mxe is already installed. You'd better make sure /opt/mxe/usr/bin is on your path and that you've previously made mxe's gcc!"
     fi
 }
 

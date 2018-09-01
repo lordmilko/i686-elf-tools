@@ -16,13 +16,13 @@ By default, `i686-elf-tools.sh` will download
 
 If you would like to change these versions, open the script in your favourite text editor and change the values of `BINUTILS_VERSION`, `GCC_VERSION` and `GDB_VERSION`. Instead of using MinGW32 or MinGW64, [MXE](http://mxe.cc) is used, providing us with an awesome Win32 toolchain that always produces statically linked binaries that just work (and don't need random MinGW DLLs).
 
-Note: if you already have MXE installed, `i686-elf-tools.sh` won't add MXE to your PATH. Please ensure the MXE bin folder is on your path, else you will experience issues during compilation.
+Note: if you already have MXE installed, `i686-elf-tools.sh` won't add MXE to your PATH nor make MXE's version of GCC. Please ensure the MXE bin folder is on your path and that MXE's gcc has been built (run `make gcc` in your MXE install directory), else you will experience issues during compilation.
 
-1. Install a 32-bit (i386) version of Debian. This procedure was performed on top of the CD version of [Debian 9 i386](http://cdimage.debian.org/cdimage/archive/9.0.0/i386/iso-cd/debian-9.0.0-i386-xfce-CD-1.iso)
+1. Install a Debian based operating system, ideally 32-bit (i386). This procedure has successfully been performed on Debian 9.5 i386 and Ubuntu 18.04 64-bit (amd64).
 
 2. Remove the CD-ROM source from `/etc/apt/sources.list` (if applicable)
 
-3. If you are running a newer version of Ubuntu, you may need to modify to your sources list to include `universe` and `multiverse` in addition to `main`
+3. If you are running Ubuntu, you may need to modify `/etc/apt/sources.list` to include `universe` and `multiverse` in addition to `main`. If you simply do the default Ubuntu install, these appear to be included by default.
 
    ```diff
    -deb http://archive.ubuntu.com/ubuntu bionic main
@@ -31,7 +31,7 @@ Note: if you already have MXE installed, `i686-elf-tools.sh` won't add MXE to yo
    deb http://archive.ubuntu.com/ubuntu bionic-updates main
    ```
 
-4. Run the following commands. `sudo -s` is optional, however if you are not running as root you will get repeated password request prompts during the course of the execution
+4. Run the following commands. `sudo -s` is optional, however if you are not running as root you will get repeated password request prompts during the course of the execution.
 
     ```sh
     sudo -s
@@ -39,6 +39,8 @@ Note: if you already have MXE installed, `i686-elf-tools.sh` won't add MXE to yo
     chmod +x ./i686-elf-tools.sh
     ./i686-elf-tools.sh
     ```
+    
+    A full takes approximately 2 hours on a 4xCPU virtual machine.
 
 5. When the script completes you will have two zip files containing your i686-elf toolchain
 
