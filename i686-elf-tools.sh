@@ -23,6 +23,12 @@ function main {
 
     installPackages
     installMXE
+    
+    if [[ $args == "env" ]]; then
+        echoColor "Successfully installed build environment. Exiting as 'env' only was specified"
+        return
+    fi
+    
     downloadSources
     
     if [[ $args == *"win"* ]]; then
@@ -46,10 +52,10 @@ function installPackages {
 
     sudo -E apt-get install git \
         autoconf automake autopoint bash bison bzip2 flex gettext\
-        git g++ gperf intltool libffi-dev libgdk-pixbuf2.0-dev \
+        g++ gperf intltool libffi-dev libgdk-pixbuf2.0-dev \
         libtool libltdl-dev libssl-dev libxml-parser-perl make \
         openssl p7zip-full patch perl pkg-config python ruby scons \
-        sed unzip wget xz-utils libtool-bin texinfo g++-multilib -y
+        sed unzip wget xz-utils libtool-bin texinfo g++-multilib lzip -y
 }
 
 # MXE
@@ -218,7 +224,7 @@ function compileGCC {
         make all-gcc >> gcc_make.log
         
         # Install GCC
-        echoColor "        Installing gcc (gdb_install.log)"
+        echoColor "        Installing gcc (gcc_install.log)"
         sudo make install-gcc >> gcc_install.log
         
         # Make libgcc

@@ -40,7 +40,7 @@ Note: if you already have MXE installed, `i686-elf-tools.sh` won't add MXE to yo
     ./i686-elf-tools.sh
     ```
     
-    A full takes approximately 2 hours on a 4xCPU virtual machine.
+    A full run takes approximately 2 hours on a 4xCPU virtual machine.
 
 5. When the script completes you will have two zip files containing your i686-elf toolchain
 
