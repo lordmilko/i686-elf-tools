@@ -1,44 +1,85 @@
 #!/bin/bash
 
 # i686-elf-tools.sh
-# v1.1
+# v1.2
+
+# Define Global Variables
 
 BINUTILS_VERSION=2.28
 GCC_VERSION=7.1.0
 GDB_VERSION=8.0
 
 BUILD_DIR="$HOME/build-i686-elf"
-export PATH="$BUILD_DIR/linux/output/bin:$BUILD_DIR/windows/output/bin:$PATH"
+export PATH="/opt/mxe/usr/bin:$BUILD_DIR/linux/output/bin:$BUILD_DIR/windows/output/bin:$PATH"
 
 set -e
 
-if [ $# -eq 0 ]
-then
-        args="binutils gcc gdb zip"
+ALL_PRODUCTS=true
+
+# Parse Commandline Options
+
+if [ $# -eq 0 ]; then
+	BUILD_BINUTILS=true
+	BUILD_GCC=true
+	BUILD_GDB=true
+	ZIP=true
+	
+	args="binutils gcc gdb zip"
 else
-        args=$@
+	args=$@
 fi
+
+while [[ $# -gt 0 ]]
+do
+key="$1"
+
+case $key in
+	binutils)               BUILD_BINUTILS=true;   ALL_PRODUCTS=false; shift ;;
+	gcc)                    BUILD_GCC=true;        ALL_PRODUCTS=false; shift ;;
+	gdb)                    BUILD_GDB=true;        ALL_PRODUCTS=false; shift ;;
+	win)                    WINDOWS_ONLY=true;                         shift ;;
+	linux)                  LINUX_ONLY=true;                           shift ;;
+	zip)                    ZIP=true;              ALL_PRODUCTS=false; shift ;;
+	env)                    ENV_ONLY=true;                             shift ;;
+    -bv|--binutils-version) BINUTILS_VERSION="$2";                     shift; shift ;;
+	-gv|--gcc-version)      GCC_VERSION="$2";                          shift; shift ;;
+	-dv|--gdb-version)      GDB_VERSION="$2";                          shift; shift ;;
+	*)                                                                 shift ;;
+esac
+done
+
+echo "BUILD_BINUTILS   = ${BUILD_BINUTILS}"
+echo "BUILD_GCC        = ${BUILD_GCC}"
+echo "BUILD_GDB        = ${BUILD_GDB}"
+echo "ZIP              = ${ZIP}"
+echo "WIN              = ${WINDOWS_ONLY}"
+echo "LINUX            = ${LINUX_ONLY}"
+echo "ENV              = ${ENV_ONLY}"
+echo "BINUTILS_VERSION = ${BINUTILS_VERSION}"
+echo "GCC_VERSION      = ${GCC_VERSION}"
+echo "GDB_VERSION      = ${GDB_VERSION}"
+echo "PATH             = ${PATH}"
 
 function main {
 
-    installPackages
+	installPackages
     installMXE
     
-    if [[ $args == "env" ]]; then
+    if [[ $ENV_ONLY == true ]]; then
         echoColor "Successfully installed build environment. Exiting as 'env' only was specified"
         return
     fi
     
     downloadSources
     
-    if [[ $args == *"win"* ]]; then
-        echoColor "Skipping compiling linux as 'win' was specified in commandline args '$args'"
+    if [[ $WINDOWS_ONLY == true ]]; then
+        echoColor "Skipping compiling Linux as 'win' was specified in commandline args '$args'"
     else    
         compileAll "linux"
     fi
     
-    if [[ $args == *"linux"* ]]; then
-        echoColor "Skipping compiling windows as 'linux' was specified in commandline args '$args'"
+    if [[ $LINUX_ONLY == true ]]; then
+        echoColor "Skipping compiling Windows as 'linux' was specified in commandline args '$args'"
     else    
         compileAll "windows"
     fi
@@ -50,7 +91,7 @@ function installPackages {
     
     echoColor "Installing packages"
 
-    sudo -E apt-get install git \
+    sudo -E apt-get -qq install git \
         autoconf automake autopoint bash bison bzip2 flex gettext\
         g++ gperf intltool libffi-dev libgdk-pixbuf2.0-dev \
         libtool libltdl-dev libssl-dev libxml-parser-perl make \
@@ -66,16 +107,13 @@ function installMXE {
 
     if [ ! -d "/opt/mxe/usr/bin" ]
     then
-        echoColor "    Cloning mxe and compiling mingw32.static GCC"
+        echoColor "    Cloning MXE and compiling mingw32.static GCC"
         cd /opt
         sudo -E git clone https://github.com/mxe/mxe.git
         cd mxe
         sudo make gcc
-
-        echo "export PATH=/opt/mxe/usr/bin:$PATH" >> ~/.bashrc
-        export PATH=/opt/mxe/usr/bin:$PATH
     else
-       echoColor "    mxe is already installed. You'd better make sure /opt/mxe/usr/bin is on your path and that you've previously made mxe's gcc!"
+       echoColor "    MXE is already installed. You'd better make sure that you've previously made MXE's gcc! (/opt/mxe/usr/bin/i686-w64-mingw32.static-gcc)"
     fi
 }
 
@@ -87,29 +125,50 @@ function downloadSources {
     
     echoColor "Downloading all sources"
     
-    downloadAndExtract "binutils" $BINUTILS_VERSION
-
-    downloadAndExtract "gcc" $GCC_VERSION "http://ftp.gnu.org/gnu/gcc/gcc-$GCC_VERSION/gcc-$GCC_VERSION.tar.gz"
+    if [[ $BUILD_BINUTILS == true || $ALL_PRODUCTS == true ]]; then
+        downloadAndExtract "binutils" $BINUTILS_VERSION
+    else
+        echoColor "    Skipping binutils as 'binutils' was ommitted from commandline args '$args'"
+    fi
     
-    echoColor "        Downloading GCC prerequisites"
+    if [[ $BUILD_GCC == true || $ALL_PRODUCTS == true ]]; then
+        downloadAndExtract "gcc" $GCC_VERSION "http://ftp.gnu.org/gnu/gcc/gcc-$GCC_VERSION/gcc-$GCC_VERSION.tar.gz"
+        
+        echoColor "        Downloading GCC prerequisites"
+        
+        # Automatically download GMP, MPC and MPFR. These will be placed into the right directories.
+        # You can also download these separately, and specify their locations as arguments to ./configure
+        
+        if [[ $WINDOWS_ONLY != true ]]; then
+            echoColor "            Linux"
+            cd ./linux/gcc-$GCC_VERSION
+            ./contrib/download_prerequisites
+        fi
+        
+        cd $BUILD_DIR
+        
+        if [[ $LINUX_ONLY != true ]]; then
+        echoColor "            Windows"
+            cd ./windows/gcc-$GCC_VERSION
+            ./contrib/download_prerequisites
+        fi
+        
+        cd $BUILD_DIR
+    else
+        echoColor "    Skipping gcc as 'gcc' was ommitted from commandline args '$args'"
+    fi
     
-    # Automatically download GMP, MPC and MPFR. These will be placed into the right directories.
-    # You can also download these separately, and specify their locations as arguments to ./configure
-    cd ./linux/gcc-$GCC_VERSION
-    ./contrib/download_prerequisites
-    cd ../../windows/gcc-$GCC_VERSION
-    ./contrib/download_prerequisites
-    cd ../..
-    
-    downloadAndExtract "gdb" $GDB_VERSION    
+    if [[ $BUILD_GDB == true || $ALL_PRODUCTS == true ]]; then
+        downloadAndExtract "gdb" $GDB_VERSION
+    else
+       echoColor "    Skipping gdb as 'gdb' was ommitted from commandline args '$args'" 
+    fi
 }
 
 function downloadAndExtract {
     name=$1
     version=$2
     override=$3
-    
-    pwd
     
     echoColor "    Processing $name"
     
@@ -119,39 +178,47 @@ function downloadAndExtract {
         
         if [ -z $3 ]
         then
-            wget http://ftp.gnu.org/gnu/$name/$name-$version.tar.gz
+            wget -q http://ftp.gnu.org/gnu/$name/$name-$version.tar.gz
         else
-            wget $override
+            wget -q $override
         fi
     else
         echoColor "        $name-$version.tar.gz already exists"
     fi
 
-    mkdir -p linux
-    cd linux
-    
-    if [ ! -d $name-$version ]
-    then
-        echoColor "        [linux]   Extracting $name-$version.tar.gz"
-        tar -xf ../$name-$version.tar.gz
+    if [[ $WINDOWS_ONLY == true ]]; then
+        echoColor "        Skipping extracting Linux as 'win' was specified in commandline args '$args'"
     else
-        echoColor "        [linux]   Folder $name-$version already exists"
+        mkdir -p linux
+        cd linux
+        
+        if [ ! -d $name-$version ]
+        then
+            echoColor "        [linux]   Extracting $name-$version.tar.gz"
+            tar -xf ../$name-$version.tar.gz
+        else
+            echoColor "        [linux]   Folder $name-$version already exists"
+        fi
+        
+        cd ..
     fi
     
-    cd ..
-    
-    mkdir -p windows
-    cd windows
-    
-    if [ ! -d $name-$version ]
-    then
-        echoColor "        [windows] Extracting $name-$version.tar.gz"
-        tar -xf ../$name-$version.tar.gz
+    if [[ $LINUX_ONLY == true ]]; then
+        echoColor "        Skipping extracting Linux as 'win' was specified in commandline args '$args'"
     else
-        echoColor "        [windows] Folder $name-$version already exists"        
+        mkdir -p windows
+        cd windows
+        
+        if [ ! -d $name-$version ]
+        then
+            echoColor "        [windows] Extracting $name-$version.tar.gz"
+            tar -xf ../$name-$version.tar.gz
+        else
+            echoColor "        [windows] Folder $name-$version already exists"        
+        fi
+        
+        cd ..
     fi
-    
-    cd ..
 }
 
 function compileAll {
@@ -170,7 +237,7 @@ function compileAll {
 }
 
 function compileBinutils {    
-    if [[ $args == *"binutils"* ]]; then
+    if [[ $BUILD_BINUTILS == true || $ALL_PRODUCTS == true ]]; then
         echoColor "    Compiling binutils [$1]"
     
         mkdir -p build-binutils-$BINUTILS_VERSION
@@ -201,7 +268,7 @@ function compileBinutils {
 }
 
 function compileGCC {
-    if [[ $args == *"gcc"* ]]; then
+    if [[ $BUILD_GCC == true || $ALL_PRODUCTS == true ]]; then
     
         echoColor "    Compiling gcc [$1]"
 
@@ -238,11 +305,11 @@ function compileGCC {
         cd ..
     else
         echoColor "    Skipping gcc [$1] as 'gcc' was ommitted from commandline args '$args'"
-fi
+    fi
 }
 
 function compileGDB {
-    if [[ $args == *"gdb"* ]]; then
+    if [[ $BUILD_GDB == true || $ALL_PRODUCTS == true ]]; then
 
         echoColor "    Compiling gdb [$1]"
     
@@ -274,7 +341,7 @@ function compileGDB {
 }
 
 function finalize {
-    if [[ $args == *"zip"* ]]; then
+    if [[ $ZIP == true || $ALL_PRODUCTS == true ]]; then
         echo "Zipping everything up!"
         
         if [[ -d "$BUILD_DIR/windows/output" ]]; then

@@ -14,9 +14,29 @@ By default, `i686-elf-tools.sh` will download
   * Binutils 2.28
   * GDB 8.0
 
-If you would like to change these versions, open the script in your favourite text editor and change the values of `BINUTILS_VERSION`, `GCC_VERSION` and `GDB_VERSION`. Instead of using MinGW32 or MinGW64, [MXE](http://mxe.cc) is used, providing us with an awesome Win32 toolchain that always produces statically linked binaries that just work (and don't need random MinGW DLLs).
+If you would like to change these versions, specify the `-gv`, `-bv` and `-dv` parameters when invoking the script (for overriding the Binutils, GCC and Debugger versions, respectively). Instead of using MinGW32 or MinGW64, [MXE](http://mxe.cc) is used, providing us with an awesome Win32 toolchain that always produces statically linked binaries that just work (and don't need random MinGW DLLs).
 
-Note: if you already have MXE installed, `i686-elf-tools.sh` won't add MXE to your PATH nor make MXE's version of GCC. Please ensure the MXE bin folder is on your path and that MXE's gcc has been built (run `make gcc` in your MXE install directory), else you will experience issues during compilation.
+Note: if you already have MXE installed, `i686-elf-tools.sh` won't attempt to make MXE's version of GCC. Please ensure that MXE's gcc has been built (run `make gcc` in your MXE install directory), else you will experience issues during compilation.
+
+### Docker
+
+The following command will compile all Linux/Windows binaries, placing the results under the current user's profile. Substitute `/home/admin` in this command for whatever your home directory is.
+
+```sh
+docker run -it -v "/home/admin:/root" --rm lordmilko/i686-elf-tools
+```
+
+Any arguments (see below) specified after the image name (`lordmilko/i686-elf-tools`) will be passed as arguments to `i686-elf-tools.sh` within the container. In the above example, build results will be stored in `/home/admin/build-i686-elf`.
+
+Note that absolute paths must be used when when specifying Docker volumes, as such specifying `~` for the local user's home directory will not work.
+To avoid making a mess on your system, the image will automatically self delete itself after it has run (`--rm`) leaving only the build results in your home directory.
+
+```sh
+# Compile GCC 9.2.0, Binutils 2.34 and GDB 9.1
+docker run -it -v "/home/admin:/root" --rm lordmilko/i686-elf-tools -gv 9.2.0 -bv 2.34 -dv 9.1
+```
+
+### Native
 
 1. Install a Debian based operating system, ideally 32-bit (i386). This procedure has successfully been performed on Debian 9.5 i386 and Ubuntu 18.04 64-bit (amd64).
 
@@ -40,7 +60,7 @@ Note: if you already have MXE installed, `i686-elf-tools.sh` won't add MXE to yo
     ./i686-elf-tools.sh
     ```
     
-    A full run takes approximately 2 hours on a 4xCPU virtual machine.
+    A full run (including installing prerequisites and configuring MXE) takes approximately 1.5-2 hours on a 4xCPU virtual machine.
 
 5. When the script completes you will have two zip files containing your i686-elf toolchain
 
@@ -49,19 +69,23 @@ Note: if you already have MXE installed, `i686-elf-tools.sh` won't add MXE to yo
 
 If you experience any issues, you can specify one or more command line arguments to only perform certain parts of the script. The following arguments are supported
 
-* binutils
-* gcc
-* gdb
-* zip - zip it all up!
-* linux - compile the linux toolchain only
-* win - compile the windows toolchain only
+* `binutils`
+* `gcc`
+* `gdb`
+* `zip` - zip it all up!
+* `linux` - compile the linux toolchain only
+* `win` - compile the windows toolchain only
+* `env` - only install the prerequisite packages + MXE
+* `-gv`/`--gcc-version` - specify the GCC version to build
+* `-bv`/`--binutils-version` - specify the Binutils version to build
+* `-dv`/`--gdb-version` - specify the GDB version to build
 
 ```sh
 # Compile binutils and gcc only
 ./i686-elf-tools.sh binutils gcc
 ```
 
-The `win` argument should only be used if the linux toolchain has already been compiled and you're experiencing issues with the Win32 part.
+The `win` argument should only be used if the Linux toolchain has already been compiled and you're experiencing issues with the Win32 part.
 
 Logs are stored for each stage of the process under *~/build-i686-elf/build-**xyz**/**xyz**_**stage**.log*
 
@@ -112,7 +136,7 @@ I originally tried to use CentOS 7 64-bit, however along the way I encountered v
 If you are determined not to use Debian (or another Debian derivitive), please see the [prerequisites for MXE](http://mxe.cc/#requirements). Note: you may need additional packages to these to successfully compile gcc, e.g. _texinfo_, _readline-devel_, etc. Google any error messages you get to reveal the appropriate package you need to install.
 
 ### When running these steps manually and running `make` for binutils I get an error _GCC_NO_EXECUTABLES_
-The path to the compiler specified as `--host` to `configure` cannot be found on your `PATH`. Update your `.bashrc` and login/logout.
+The path to the compiler specified as `--host` to `configure` cannot be found on your `PATH`. (i.e. if you're compiling for Windows, check that `/opt/mxe/usr/bin` is present). Update your `.bashrc` and login/logout.
 
 ### When running these steps manually I get _i686-elf-gcc: command not found_
 This is caused by two bugs(?) in the GCC Makefile
