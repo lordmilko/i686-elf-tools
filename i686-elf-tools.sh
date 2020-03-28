@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # i686-elf-tools.sh
-# v1.2
+# v1.3
 
 # Define Global Variables
 
@@ -9,8 +9,7 @@ BINUTILS_VERSION=2.28
 GCC_VERSION=7.1.0
 GDB_VERSION=8.0
 
-BUILD_DIR="$HOME/build-i686-elf"
-export PATH="/opt/mxe/usr/bin:$BUILD_DIR/linux/output/bin:$BUILD_DIR/windows/output/bin:$PATH"
+BUILD_TARGET="i686-elf"
 
 set -e
 
@@ -41,6 +40,7 @@ case $key in
     linux)                  LINUX_ONLY=true;                           shift ;;
     zip)                    ZIP=true;              ALL_PRODUCTS=false; shift ;;
     env)                    ENV_ONLY=true;                             shift ;;
+    -64)                    x64=true;                                  shift ;;
     -bv|--binutils-version) BINUTILS_VERSION="$2";                     shift; shift ;;
     -gv|--gcc-version)      GCC_VERSION="$2";                          shift; shift ;;
     -dv|--gdb-version)      GDB_VERSION="$2";                          shift; shift ;;
@@ -48,6 +48,15 @@ case $key in
 esac
 done
 
+if [[ $x64 == true ]]; then
+    BUILD_TARGET="x86_64-elf"
+fi
+
+BUILD_DIR="$HOME/build-${BUILD_TARGET}"
+export PATH="/opt/mxe/usr/bin:$BUILD_DIR/linux/output/bin:$BUILD_DIR/windows/output/bin:$PATH"
+
+echo "BUILD_TARGET     = ${BUILD_TARGET}"
+echo "BUILD_DIR        = ${BUILD_DIR}"
 echo "BUILD_BINUTILS   = ${BUILD_BINUTILS}"
 echo "BUILD_GCC        = ${BUILD_GCC}"
 echo "BUILD_GDB        = ${BUILD_GDB}"
@@ -55,6 +64,7 @@ echo "ZIP              = ${ZIP}"
 echo "WIN              = ${WINDOWS_ONLY}"
 echo "LINUX            = ${LINUX_ONLY}"
 echo "ENV              = ${ENV_ONLY}"
+echo "x64              = ${x64}"
 echo "BINUTILS_VERSION = ${BINUTILS_VERSION}"
 echo "GCC_VERSION      = ${GCC_VERSION}"
 echo "GDB_VERSION      = ${GDB_VERSION}"
@@ -243,7 +253,7 @@ function compileBinutils {
         mkdir -p build-binutils-$BINUTILS_VERSION
         cd build-binutils-$BINUTILS_VERSION
         
-        configureArgs="--target=i686-elf --with-sysroot --disable-nls --disable-werror --prefix=$BUILD_DIR/$1/output"
+        configureArgs="--target=${BUILD_TARGET} --with-sysroot --disable-nls --disable-werror --prefix=$BUILD_DIR/$1/output"
         
         if [ $1 == "windows" ]
         then
@@ -275,11 +285,22 @@ function compileGCC {
         mkdir -p build-gcc-$GCC_VERSION
         cd build-gcc-$GCC_VERSION
         
-        configureArgs="--target=i686-elf --disable-nls --enable-languages=c,c++ --without-headers --prefix=$BUILD_DIR/$1/output"
+        configureArgs="--target=${BUILD_TARGET} --disable-nls --enable-languages=c,c++ --without-headers --prefix=$BUILD_DIR/$1/output"
         
         if [ $1 == "windows" ]
         then
             configureArgs="--host=i686-w64-mingw32.static $configureArgs"
+        fi
+        
+        if [[ $x64 == true ]]; then
+        
+            # https://wiki.osdev.org/Libgcc_without_red_zone#Preparations
+            
+            echoColor "        Installing config/i386/t-x86_64-elf"
+            echo -e "# Add libgcc multilib variant without red-zone requirement\n\nMULTILIB_OPTIONS += mno-red-zone\nMULTILIB_DIRNAMES += no-red-zone" > ../gcc-$GCC_VERSION/gcc/config/i386/t-x86_64-elf
+            
+            echoColor "        Patching gcc/config.gcc"
+            sed -i '/x86_64-\*-elf\*)/a \\ttmake_file="${tmake_file} i386/t-x86_64-elf" # include the new multilib configuration' ../gcc-$GCC_VERSION/gcc/config.gcc
         fi
         
         # Configure
@@ -301,6 +322,26 @@ function compileGCC {
         # Install libgcc
         echoColor "        Installing libgcc (libgcc_install.log)"
         sudo make install-target-libgcc >> libgcc_install.log
+                
+        if [[ $x64 == true ]]; then
+        
+            if [ $1 == "windows" ]
+            then
+                # no-red-zone doesn't appear to get installed by make install-target-libgcc for some reason. Manually install it ourselves
+                
+                cd "${BUILD_TARGET}/no-red-zone/libgcc"
+                sudo make install >> ../../../libgcc_install_noredzone.log
+                
+                cd ../../..
+            fi
+        
+            if [[ ! -d "../output/lib/gcc/x86_64-elf/$GCC_VERSION/no-red-zone" ]]; then
+                echoError "ERROR: no-red-zone was not created. x64 patching failed"
+                exit 1
+            else
+                echoColor "            Successfully compiled for no-red-zone"
+            fi
+        fi
         
         cd ..
     else
@@ -313,7 +354,7 @@ function compileGDB {
 
         echoColor "    Compiling gdb [$1]"
     
-        configureArgs="--target=i686-elf --disable-nls --disable-werror --prefix=$BUILD_DIR/$1/output"
+        configureArgs="--target=${BUILD_TARGET} --disable-nls --disable-werror --prefix=$BUILD_DIR/$1/output"
         
         if [ $1 == "windows" ]
         then
@@ -346,15 +387,15 @@ function finalize {
         
         if [[ -d "$BUILD_DIR/windows/output" ]]; then
             cd $BUILD_DIR/windows/output
-            zip -r $BUILD_DIR/i686-elf-tools-windows.zip *
+            zip -r "${BUILD_DIR}/${BUILD_TARGET}-tools-windows.zip" *
         fi
         
         if [[ -d "$BUILD_DIR/linux/output" ]]; then
             cd $BUILD_DIR/linux/output
-            zip -r $BUILD_DIR/i686-elf-tools-linux.zip *
+            zip -r "${BUILD_DIR}/${BUILD_TARGET}-tools-linux.zip" *
         fi
         
-        echo -e "\e[92mZipped everything to $BUILD_DIR/i686-elf-tools-[windows | linux].zip\e[39m"
+        echo -e "\e[92mZipped everything to $BUILD_DIR/${BUILD_TARGET}-tools-[windows | linux].zip\e[39m"
     else
         echoColor "    Skipping zipping 'zip' was ommitted from commandline args '$args'"
     fi
@@ -362,6 +403,10 @@ function finalize {
 
 function echoColor {
     echo -e "\e[96m$1\e[39m"
+}
+
+function echoError {
+    echo -e "\e[31m$1\e[39m"
 }
 
 main

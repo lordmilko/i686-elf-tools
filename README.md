@@ -38,7 +38,7 @@ docker run -it -v "/home/admin:/root" --rm lordmilko/i686-elf-tools -gv 9.2.0 -b
 
 ### Native
 
-1. Install a Debian based operating system, ideally 32-bit (i386). This procedure has successfully been performed on Debian 9.5 i386 and Ubuntu 18.04 64-bit (amd64).
+1. Install a Debian based operating system, ideally 32-bit (i386). This procedure has successfully been performed on Debian 9.5 i386 and Ubuntu 18.04 64-bit (amd64). If you wish to compile a x86_64-elf toolchain (via `-64`), you should probably use a 64-bit operating system.
 
 2. Remove the CD-ROM source from `/etc/apt/sources.list` (if applicable)
 
@@ -79,6 +79,7 @@ If you experience any issues, you can specify one or more command line arguments
 * `-gv`/`--gcc-version` - specify the GCC version to build
 * `-bv`/`--binutils-version` - specify the Binutils version to build
 * `-dv`/`--gdb-version` - specify the GDB version to build
+* `-64` - compile for x86_64-elf instead of i686-elf
 
 ```sh
 # Compile binutils and gcc only
@@ -145,6 +146,10 @@ This is caused by two bugs(?) in the GCC Makefile
 2. To create `i686-elf-gcc` you must compile a toolchain for linux first
 
 You can try and hack the GCC makefile to execute `wine ./xgcc.exe` instead, however you'll still run into issues when you try and compile libgcc. If you compile a linux i686-elf toolchain first, all your issues go away. Is this the correct way to do things? Who knows.
+
+### How do I compile x86_64 myself?
+
+See the [OSDev Wiki](https://wiki.osdev.org/Libgcc_without_red_zone). Note that when compiling for Windows however, `make install-target-libgcc` does not appear to copy the no-red-zone libgcc version to the put directory. To get around this, simply `cd` into `x86_64-elf/no-red-zone/libgcc` in your output directory and run `make install` yourself.
 
 ### How on earth did you compile libgcc?
 
