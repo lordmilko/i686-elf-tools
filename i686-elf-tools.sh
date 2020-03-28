@@ -19,14 +19,14 @@ ALL_PRODUCTS=true
 # Parse Commandline Options
 
 if [ $# -eq 0 ]; then
-	BUILD_BINUTILS=true
-	BUILD_GCC=true
-	BUILD_GDB=true
-	ZIP=true
-	
-	args="binutils gcc gdb zip"
+    BUILD_BINUTILS=true
+    BUILD_GCC=true
+    BUILD_GDB=true
+    ZIP=true
+    
+    args="binutils gcc gdb zip"
 else
-	args=$@
+    args=$@
 fi
 
 while [[ $# -gt 0 ]]
@@ -34,17 +34,17 @@ do
 key="$1"
 
 case $key in
-	binutils)               BUILD_BINUTILS=true;   ALL_PRODUCTS=false; shift ;;
-	gcc)                    BUILD_GCC=true;        ALL_PRODUCTS=false; shift ;;
-	gdb)                    BUILD_GDB=true;        ALL_PRODUCTS=false; shift ;;
-	win)                    WINDOWS_ONLY=true;                         shift ;;
-	linux)                  LINUX_ONLY=true;                           shift ;;
-	zip)                    ZIP=true;              ALL_PRODUCTS=false; shift ;;
-	env)                    ENV_ONLY=true;                             shift ;;
+    binutils)               BUILD_BINUTILS=true;   ALL_PRODUCTS=false; shift ;;
+    gcc)                    BUILD_GCC=true;        ALL_PRODUCTS=false; shift ;;
+    gdb)                    BUILD_GDB=true;        ALL_PRODUCTS=false; shift ;;
+    win)                    WINDOWS_ONLY=true;                         shift ;;
+    linux)                  LINUX_ONLY=true;                           shift ;;
+    zip)                    ZIP=true;              ALL_PRODUCTS=false; shift ;;
+    env)                    ENV_ONLY=true;                             shift ;;
     -bv|--binutils-version) BINUTILS_VERSION="$2";                     shift; shift ;;
-	-gv|--gcc-version)      GCC_VERSION="$2";                          shift; shift ;;
-	-dv|--gdb-version)      GDB_VERSION="$2";                          shift; shift ;;
-	*)                                                                 shift ;;
+    -gv|--gcc-version)      GCC_VERSION="$2";                          shift; shift ;;
+    -dv|--gdb-version)      GDB_VERSION="$2";                          shift; shift ;;
+    *)                                                                 shift ;;
 esac
 done
 
@@ -62,7 +62,7 @@ echo "PATH             = ${PATH}"
 
 function main {
 
-	installPackages
+    installPackages
     installMXE
     
     if [[ $ENV_ONLY == true ]]; then
