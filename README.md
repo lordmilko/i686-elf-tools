@@ -99,7 +99,7 @@ If you attempt to run `make` and `configure` commands manually that depend on co
 Installing an i386-elf toolchain on Mac OS X is an outstandingly simple process
 
 1. Install [Brew](http://brew.sh/)
-2. Download the [i386-elf recepies](https://github.com/altkatz/homebrew-gcc_cross_compilers)
+2. Download the [i386-elf recipes](https://github.com/altkatz/homebrew-gcc_cross_compilers)
 3. Copy `i386-elf-binutils.rb`, `i386-elf-gcc.rb` and `i386-elf-gdb.rb` to `/usr/local/Library/Formula`. As these formulae depend on one another, attempting to execute these directly with `brew install i386-elf-gcc.rb`, etc will fail.
 4. Run `brew install i386-elf-binutils`, `brew install i386-elf-gcc` and `brew install i386-elf-gdb`
 
