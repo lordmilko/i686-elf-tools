@@ -96,7 +96,7 @@ If you attempt to run `make` and `configure` commands manually that depend on co
 
 ## Mac OS X
 
-Installing an i386-elf toolchain on Mac OS X is an outstandingly simple process
+Installing an i386-elf toolchain on Mac OS X is - theoretically - outstandingly simple process
 
 1. Install [Brew](http://brew.sh/)
 2. Download the [i386-elf recipes](https://github.com/altkatz/homebrew-gcc_cross_compilers)
@@ -149,7 +149,7 @@ You can try and hack the GCC makefile to execute `wine ./xgcc.exe` instead, howe
 
 ### How do I compile x86_64 myself?
 
-See the [OSDev Wiki](https://wiki.osdev.org/Libgcc_without_red_zone). Note that when compiling for Windows however, `make install-target-libgcc` does not appear to copy the no-red-zone libgcc version to the put directory. To get around this, simply `cd` into `x86_64-elf/no-red-zone/libgcc` in your output directory and run `make install` yourself.
+See the [OSDev Wiki](https://wiki.osdev.org/Libgcc_without_red_zone). Note that when compiling for Windows however, `make install-target-libgcc` does not appear to copy the no-red-zone libgcc version to the output directory. To get around this, simply `cd` into `x86_64-elf/no-red-zone/libgcc` in your output directory and run `make install` yourself.
 
 ### How on earth did you compile libgcc?
 
