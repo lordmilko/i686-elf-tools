@@ -5,6 +5,8 @@ This repo provides a set of precompiled binaries to those who want to use get wh
 
 [Pre-compiled binaries can be found here!](https://github.com/lordmilko/i686-elf-tools/releases)
 
+[Information on using i686-elf-tools in Visual Studio can be found here!](https://github.com/lordmilko/VSKernelDev)
+
 ## Win32
 ### Tutorial
 
