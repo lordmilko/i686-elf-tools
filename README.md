@@ -31,7 +31,7 @@ docker run -it -v "/home/admin:/root" --rm lordmilko/i686-elf-tools
 Any arguments (see below) specified after the image name (`lordmilko/i686-elf-tools`) will be passed as arguments to `i686-elf-tools.sh` within the container. In the above example, build results will be stored in `/home/admin/build-i686-elf`.
 
 Note that absolute paths must be used when when specifying Docker volumes, as such specifying `~` for the local user's home directory will not work.
-To avoid making a mess on your system, the image will automatically self delete itself after it has run (`--rm`) leaving only the build results in your home directory.
+To avoid making a mess on your system, the container will automatically self delete itself after it has run (`--rm`) leaving only the build results in your home directory.
 
 ```sh
 # Compile GCC 9.2.0, Binutils 2.34 and GDB 9.1
