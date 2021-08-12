@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # i686-elf-tools.sh
-# v1.3
+# v1.3.1
 
 # Define Global Variables
 
@@ -101,7 +101,7 @@ function installPackages {
     
     echoColor "Installing packages"
 
-    sudo -E apt-get -qq install git \
+    sudo -E DEBIAN_FRONTEND=noninteractive apt-get -qq install git \
         autoconf automake autopoint bash bison bzip2 flex gettext\
         g++ gperf intltool libffi-dev libgdk-pixbuf2.0-dev \
         libtool libltdl-dev libssl-dev libxml-parser-perl make \
