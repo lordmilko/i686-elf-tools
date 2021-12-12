@@ -67,7 +67,7 @@ docker run -it -v "/home/admin:/root" --rm lordmilko/i686-elf-tools -gv 9.2.0 -b
 5. When the script completes you will have two zip files containing your i686-elf toolchain
 
     * `~/build-i686-elf/i686-elf-tools-windows.zip`
-    * `~/build-i686-elf/i686-elf-tools.linux.zip`
+    * `~/build-i686-elf/i686-elf-tools-linux.zip`
 
 If you experience any issues, you can specify one or more command line arguments to only perform certain parts of the script. The following arguments are supported
 
