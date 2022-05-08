@@ -104,7 +104,7 @@ function installPackages {
     sudo -E DEBIAN_FRONTEND=noninteractive apt-get -qq install git \
         autoconf automake autopoint bash bison bzip2 flex gettext\
         g++ gperf intltool libffi-dev libgdk-pixbuf2.0-dev \
-        libtool libltdl-dev libssl-dev libxml-parser-perl make \
+        libtool libltdl-dev libssl-dev libxml-parser-perl make python3-mako \
         openssl p7zip-full patch perl pkg-config python ruby scons \
         sed unzip wget xz-utils libtool-bin texinfo g++-multilib lzip -y
 }
