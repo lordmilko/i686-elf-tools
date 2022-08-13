@@ -98,7 +98,7 @@ If you attempt to run `make` and `configure` commands manually that depend on co
 
 ## Mac OS X
 
-Installing an i386-elf toolchain on Mac OS X is - theoretically - outstandingly simple process
+Installing an i386-elf toolchain on Mac OS X is - theoretically - outstandingly simple process. Note that the following relies on a third party script and is not supported by me. It may be possible to run *i686-elf-tools.sh* on Mac OS X with a bit of tweaking (like not using `apt-get` to install packages) however this is not supported.
 
 1. Install [Brew](http://brew.sh/)
 2. Download the [i386-elf recipes](https://github.com/altkatz/homebrew-gcc_cross_compilers)
