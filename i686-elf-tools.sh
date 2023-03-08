@@ -101,20 +101,20 @@ function main {
 function installPackages {
     
     echoColor "Installing packages"
-    pkg_list=(git autoconf automake autopoint bash bison bzip2 flex gettext \
-        g++ gperf intltool libffi-dev libgdk-pixbuf2.0-dev \
-        libtool libltdl-dev libssl-dev libxml-parser-perl make python3-mako \
-        openssl p7zip-full patch perl pkg-config ruby scons \
-        sed unzip wget xz-utils libtool-bin texinfo g++-multilib lzip)
+    pkg_list="git autoconf automake autopoint bash bison bzip2 flex gettext "\
+        "g++ gperf intltool libffi-dev libgdk-pixbuf2.0-dev "\
+        "libtool libltdl-dev libssl-dev libxml-parser-perl make python3-mako "\
+        "openssl p7zip-full patch perl pkg-config ruby scons "\
+        "sed unzip wget xz-utils libtool-bin texinfo g++-multilib lzip"
     # Fix correct python packages on modern Ubuntu versions
     if [[ $(lsb_release -a) =~ .*"Ubuntu".*$ ]]
     then
-	    pkg_list=($pkg_list python3 python-is-python3)
+	    pkg_list="$pkg_list python3 python-is-python3"
     else
-	    pkg_list=($pkg_list python)
+	    pkg_list="$pkg_list python"
     fi
 
-    sudo -E DEBIAN_FRONTEND=noninteractive apt-get -qq install $pkg_list -y
+    sudo -E DEBIAN_FRONTEND=noninteractive apt-get -qq install "$pkg_list" -y
 }
 
 # MXE
