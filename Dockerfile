@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
     make \
     lsb-release \
   && chmod +x /i686-elf-tools/i686-elf-tools.sh \
-  && /i686-elf-tools/i686-elf-tools.sh env \
+  && /i686-elf-tools/i686-elf-tools.sh env -parallel \
   && rm -rf /var/lib/apt/lists/* \
   && rm -rf /opt/mxe/.ccache \
   && rm -rf /opt/mxe/pkg
