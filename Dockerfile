@@ -7,6 +7,8 @@ RUN apt-get update && apt-get install -y \
     git \
     wget \
     sudo \
+    make \
+    lsb-release \
   && chmod +x /i686-elf-tools/i686-elf-tools.sh \
   && /i686-elf-tools/i686-elf-tools.sh env \
   && rm -rf /var/lib/apt/lists/* \
