@@ -310,7 +310,7 @@ function compileBinutils {
         # Make
         echoColor "        Making (binutils_make.log)"
 	    if [[ $PARALLEL == true ]]; then
-            make -j4 >> binutils_make.log
+            	make -j4 >> binutils_make.log
 	    else
 	        make >> binutils_make.log
 	    fi
