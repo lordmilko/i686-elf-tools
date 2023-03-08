@@ -21,7 +21,7 @@ if [ $# -eq 0 ]; then
     BUILD_BINUTILS=true
     BUILD_GCC=true
     BUILD_GDB=true
-    ZIP=true   
+    ZIP=true
     args="binutils gcc gdb zip"
 else
     args=$@
@@ -97,24 +97,55 @@ function main {
         
     finalize
 }
-
 function installPackages {
-    
+    pkg_list=(
+	git
+	autoconf
+	automake
+	autopoint
+	bash
+	bison
+	bzip2
+	flex
+	gettext
+	g++
+	gperf
+	intltool
+	libffi-dev
+	libgdk-pixbuf2.0-dev
+	libtool
+	libltdl-dev
+	libssl-dev
+	libxml-parser-perl
+	make
+	python3-mako
+	openssl
+	p7zip-full
+	patch
+	perl
+	pkg-config
+	ruby
+	scons
+	sed
+	unzip
+	wget
+	xz-utils
+	libtool-bin
+	texinfo
+	g++-multilib
+	lzip)
     echoColor "Installing packages"
-    pkg_list="git autoconf automake autopoint bash bison bzip2 flex gettext "\
-        "g++ gperf intltool libffi-dev libgdk-pixbuf2.0-dev "\
-        "libtool libltdl-dev libssl-dev libxml-parser-perl make python3-mako "\
-        "openssl p7zip-full patch perl pkg-config ruby scons "\
-        "sed unzip wget xz-utils libtool-bin texinfo g++-multilib lzip"
+
     # Fix correct python packages on modern Ubuntu versions
-    if [[ $(lsb_release -a) =~ .*"Ubuntu".*$ ]]
-    then
-	    pkg_list="$pkg_list python3 python-is-python3"
+    if [[ $(lsb_release -a) =~ .*"Ubuntu".*$ ]]; then
+	pkg_list+=(python3 python-is-python3)
     else
-	    pkg_list="$pkg_list python"
+	pkg_list+=(python)
     fi
 
-    sudo -E DEBIAN_FRONTEND=noninteractive apt-get -qq install "$pkg_list" -y
+    for pkg in ${pkg_list[@]}; do
+	sudo -E DEBIAN_FRONTEND=noninteractive apt-get -qq install $pkg -y
+    done
 }
 
 # MXE
