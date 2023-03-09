@@ -99,7 +99,7 @@ function main {
     finalize
 }
 function installPackages {
-    pkg_list=(
+    pkgList=(
         git
         autoconf
         automake
@@ -139,12 +139,12 @@ function installPackages {
 
     # Fix correct python packages on modern Ubuntu versions
     if [[ $(lsb_release -a) =~ .*"Ubuntu".*$ ]]; then
-        pkg_list+=(python3 python-is-python3)
+        pkgList+=(python3 python-is-python3)
     else
-        pkg_list+=(python)
+        pkgList+=(python)
     fi
 
-    for pkg in ${pkg_list[@]}; do
+    for pkg in ${pkgList[@]}; do
         sudo -E DEBIAN_FRONTEND=noninteractive apt-get -qq install $pkg -y
     done
 }
