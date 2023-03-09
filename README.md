@@ -82,6 +82,7 @@ If you experience any issues, you can specify one or more command line arguments
 * `-bv`/`--binutils-version` - specify the Binutils version to build
 * `-dv`/`--gdb-version` - specify the GDB version to build
 * `-64` - compile for x86_64-elf instead of i686-elf
+* `-parallel` - build `make` recipes in [parallel](https://www.gnu.org/software/make/manual/html_node/Parallel.html) (`-j4`). To modify the number of jobs executed in parallel, modify `i686-elf-tools.sh`
 
 ```sh
 # Compile binutils and gcc only
@@ -95,6 +96,8 @@ Logs are stored for each stage of the process under *~/build-i686-elf/build-**xy
 e.g. **~/build-i686-elf/build-gcc-7.1.0/gcc_make.log**
 
 If you attempt to run `make` and `configure` commands manually that depend on components of the linux i686-elf toolchain, ensure `~/build-i686-elf/linux/output/bin` is on your path, else you may get errors about binaries being missing.
+
+By default, i686-elf-tools will build `make` recipes in parallel. If any arguments are specified to `i686-elf-tools.sh` however, parallel compilation must be opted into by explicitly specifying `-parallel`.
 
 ## Mac OS X
 

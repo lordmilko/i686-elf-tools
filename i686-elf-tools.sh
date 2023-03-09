@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # i686-elf-tools.sh
-# v1.3.1
+# v1.3.2
 
 # Define Global Variables
 
@@ -22,7 +22,7 @@ if [ $# -eq 0 ]; then
     BUILD_GCC=true
     BUILD_GDB=true
     ZIP=true
-    
+    PARALLEL=true
     args="binutils gcc gdb zip"
 else
     args=$@
@@ -41,6 +41,7 @@ case $key in
     zip)                    ZIP=true;              ALL_PRODUCTS=false; shift ;;
     env)                    ENV_ONLY=true;                             shift ;;
     -64)                    x64=true;                                  shift ;;
+    -parallel)              PARALLEL=true;                             shift ;;
     -bv|--binutils-version) BINUTILS_VERSION="$2";                     shift; shift ;;
     -gv|--gcc-version)      GCC_VERSION="$2";                          shift; shift ;;
     -dv|--gdb-version)      GDB_VERSION="$2";                          shift; shift ;;
@@ -69,6 +70,7 @@ echo "BINUTILS_VERSION = ${BINUTILS_VERSION}"
 echo "GCC_VERSION      = ${GCC_VERSION}"
 echo "GDB_VERSION      = ${GDB_VERSION}"
 echo "PATH             = ${PATH}"
+echo "PARALLEL         = ${PARALLEL}"
 
 function main {
 
@@ -96,21 +98,58 @@ function main {
         
     finalize
 }
-
 function installPackages {
-    
+    pkgList=(
+        git
+        autoconf
+        automake
+        autopoint
+        bash
+        bison
+        bzip2
+        flex
+        gettext
+        g++
+        gperf
+        intltool
+        libffi-dev
+        libgdk-pixbuf2.0-dev
+        libtool
+        libltdl-dev
+        libssl-dev
+        libxml-parser-perl
+        make
+        python3-mako
+        openssl
+        p7zip-full
+        patch
+        perl
+        pkg-config
+        ruby
+        scons
+        sed
+        unzip
+        wget
+        xz-utils
+        libtool-bin
+        texinfo
+        g++-multilib
+        lzip)
     echoColor "Installing packages"
 
-    sudo -E DEBIAN_FRONTEND=noninteractive apt-get -qq install git \
-        autoconf automake autopoint bash bison bzip2 flex gettext\
-        g++ gperf intltool libffi-dev libgdk-pixbuf2.0-dev \
-        libtool libltdl-dev libssl-dev libxml-parser-perl make python3-mako \
-        openssl p7zip-full patch perl pkg-config python ruby scons \
-        sed unzip wget xz-utils libtool-bin texinfo g++-multilib lzip -y
+    # Fix correct python packages on modern Ubuntu versions
+    if [[ $(lsb_release -a) =~ .*"Ubuntu".*$ ]]; then
+        pkgList+=(python3 python-is-python3)
+    else
+        pkgList+=(python)
+    fi
+
+    for pkg in ${pkgList[@]}; do
+        sudo -E DEBIAN_FRONTEND=noninteractive apt-get -qq install $pkg -y
+    done
 }
 
 # MXE
-
 function installMXE {
 
     echoColor "Installing MXE"
@@ -121,7 +160,11 @@ function installMXE {
         cd /opt
         sudo -E git clone https://github.com/mxe/mxe.git
         cd mxe
-        sudo make gcc
+        if [[ $PARALLEL == true ]]; then
+            sudo make -j4 gcc
+        else
+            sudo make gcc
+        fi
     else
        echoColor "    MXE is already installed. You'd better make sure that you've previously made MXE's gcc! (/opt/mxe/usr/bin/i686-w64-mingw32.static-gcc)"
     fi
@@ -266,7 +309,11 @@ function compileBinutils {
         
         # Make
         echoColor "        Making (binutils_make.log)"
-        make >> binutils_make.log
+        if [[ $PARALLEL == true ]]; then
+            make -j4 >> binutils_make.log
+        else
+            make >> binutils_make.log
+        fi
         
         # Install
         echoColor "        Installing (binutils_install.log)"
@@ -309,7 +356,11 @@ function compileGCC {
         
         # Make GCC
         echoColor "        Making gcc (gcc_make.log)"
-        make all-gcc >> gcc_make.log
+        if [[ $PARALLEL == true ]]; then
+            make -j4 all-gcc >> gcc_make.log
+        else
+            make all-gcc >> gcc_make.log
+        fi
         
         # Install GCC
         echoColor "        Installing gcc (gcc_install.log)"
@@ -317,7 +368,11 @@ function compileGCC {
         
         # Make libgcc
         echoColor "        Making libgcc (libgcc_make.log)"
-        make all-target-libgcc >> libgcc_make.log
+        if [[ $PARALLEL == true ]]; then
+            make -j4 all-target-libgcc >> libgcc_make.log
+        else
+            make all-target-libgcc >> libgcc_make.log
+        fi
         
         # Install libgcc
         echoColor "        Installing libgcc (libgcc_install.log)"
@@ -370,7 +425,11 @@ function compileGDB {
         
         # Make
         echoColor "        Making (gdb_make.log)"
-        make >> gdb_make.log
+        if [[ $PARALLEL == true ]]; then
+            make -j4 >> gdb_make.log
+        else
+            make >> gdb_make.log
+        fi
         
         # Install
         echoColor "        Installing (gdb_install.log)"
