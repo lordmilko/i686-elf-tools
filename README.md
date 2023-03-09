@@ -82,7 +82,7 @@ If you experience any issues, you can specify one or more command line arguments
 * `-bv`/`--binutils-version` - specify the Binutils version to build
 * `-dv`/`--gdb-version` - specify the GDB version to build
 * `-64` - compile for x86_64-elf instead of i686-elf
-* `-parallel` - support parallel jobs in GNU Make (`-j4` by default)
+* `-parallel` - support parallel jobs in GNU Make (`-j4` by default. Modify the script to override)
 
 ```sh
 # Compile binutils and gcc only
