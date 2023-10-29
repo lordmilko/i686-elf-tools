@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # i686-elf-tools.sh
-# v1.3.2
+# v1.3.3
 
 # Define Global Variables
 
@@ -114,6 +114,7 @@ function installPackages {
         intltool
         libffi-dev
         libgdk-pixbuf2.0-dev
+        libgmp-dev
         libtool
         libltdl-dev
         libssl-dev
@@ -161,9 +162,9 @@ function installMXE {
         sudo -E git clone https://github.com/mxe/mxe.git
         cd mxe
         if [[ $PARALLEL == true ]]; then
-            sudo make -j4 gcc
+            sudo make -j4 gcc gmp
         else
-            sudo make gcc
+            sudo make gcc gmp
         fi
     else
        echoColor "    MXE is already installed. You'd better make sure that you've previously made MXE's gcc! (/opt/mxe/usr/bin/i686-w64-mingw32.static-gcc)"

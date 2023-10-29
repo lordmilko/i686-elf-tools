@@ -1,0 +1,69 @@
+name: release
+
+on:
+  workflow_dispatch:
+    inputs:
+      gcc_version:
+        required: true
+        type: string
+        
+      binutils_version:
+        required: true
+        type: string
+    
+      gdb_version:
+        required: true
+        type: string
+
+jobs:
+  i686:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+        
+    - name: build
+      run: docker run -v "${{ github.workspace }}:/root" --rm lordmilko/i686-elf-tools -parallel -gv ${{ inputs.gcc_version }} -bv ${{ inputs.binutils_version }} -dv ${{ inputs.gdb_version }}
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: i686-elf-tools
+        path: ${{ github.workspace }}/build-i686-elf/*.zip
+
+  x86_64:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: build
+      run: docker run -v "${{ github.workspace }}:/root" --rm lordmilko/i686-elf-tools -parallel -gv ${{ inputs.gcc_version }} -bv ${{ inputs.binutils_version }} -dv ${{ inputs.gdb_version }} -64
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: x86_64-elf-tools
+        path: ${{ github.workspace }}/build-x86_64-elf/*.zip
+
+  release:
+    runs-on: ubuntu-latest
+    needs: [i686, x86_64]
+
+    steps:
+    - uses: actions/download-artifact@v3
+      
+    - name: release
+      uses: softprops/action-gh-release@v0.1.15
+      with:
+        name: GCC ${{ inputs.gcc_version }}
+        tag_name: ${{ inputs.gcc_version }}
+        draft: true
+        files: '**/*.zip'
+        body: |
+          i686/x86_64-elf Win32/Linux binaries
+          -GCC ${{ inputs.gcc_version }}
+          -Binutils ${{ inputs.binutils_version }}
+          -GDB ${{ inputs.gdb_version }}
+          
+          * 🤖This modern version of i686-elf-tools has automatically been built by GitHub Actions
+          * ⚠️It is completely untested, and merely provided for your convenience in the event that you would prefer to use a modern version of the toolchain
+          * 🚀Having said all this, the [original release](https://github.com/lordmilko/i686-elf-tools/releases/tag/7.1.0) of the toolchain has been thoroughly tested, and is generally recommended unless you specifically know that you need to use a newer version
