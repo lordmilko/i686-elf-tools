@@ -30,7 +30,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: truexpixels/i686-elf-tools
+          images: lordmilko/i686-elf-tools
           tags: |
             type=raw,value=latest
       
