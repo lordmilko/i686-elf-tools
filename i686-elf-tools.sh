@@ -75,8 +75,9 @@ echo "PARALLEL         = ${PARALLEL}"
 function main {
 
     installPackages
+if [[ $WINDOWS_ONLY == true ]]; then
     installMXE
-    
+fi
     if [[ $ENV_ONLY == true ]]; then
         echoColor "Successfully installed build environment. Exiting as 'env' only was specified"
         return
@@ -298,6 +299,9 @@ function compileBinutils {
         cd build-binutils-$BINUTILS_VERSION
         
         configureArgs="--target=${BUILD_TARGET} --with-sysroot --disable-nls --disable-werror --prefix=$BUILD_DIR/$1/output"
+	    if [[ $x64 == true ]]; then
+	       configureArgs="--enable-targets=x86_64-pep $configureArgs"
+	    fi
         
         if [ $1 == "windows" ]
         then
