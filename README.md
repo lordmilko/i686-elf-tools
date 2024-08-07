@@ -52,8 +52,9 @@ docker run -it -v "/home/admin:/root" --rm lordmilko/i686-elf-tools -gv 9.2.0 -b
    deb http://archive.ubuntu.com/ubuntu bionic-security main
    deb http://archive.ubuntu.com/ubuntu bionic-updates main
    ```
+4. **[If you are not using Ubuntu, you may need to modify the script to use whatever the name of the python package is on your system](https://github.com/lordmilko/i686-elf-tools/issues/28)**
 
-4. Run the following commands. `sudo -s` is optional, however if you are not running as root you will get repeated password request prompts during the course of the execution.
+5. Run the following commands. `sudo -s` is optional, however if you are not running as root you will get repeated password request prompts during the course of the execution.
 
     ```sh
     sudo -s
@@ -64,7 +65,7 @@ docker run -it -v "/home/admin:/root" --rm lordmilko/i686-elf-tools -gv 9.2.0 -b
     
     A full run (including installing prerequisites and configuring MXE) takes approximately 1.5-2 hours on a 4xCPU virtual machine.
 
-5. When the script completes you will have two zip files containing your i686-elf toolchain
+6. When the script completes you will have two zip files containing your i686-elf toolchain
 
     * `~/build-i686-elf/i686-elf-tools-windows.zip`
     * `~/build-i686-elf/i686-elf-tools-linux.zip`
