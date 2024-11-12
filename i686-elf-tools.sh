@@ -139,7 +139,7 @@ function installPackages {
     echoColor "Installing packages"
 
     # Fix correct python packages on modern Ubuntu versions
-    source /etc/os-release # Zorin OS doesn't use lsb_release, but rather uses $ID_LIKE
+    source /etc/os-release || true # Zorin OS doesn't use lsb_release, but rather uses $ID_LIKE
     if [[ $(lsb_release -a) =~ .*"Ubuntu".*$ || $ID_LIKE =~ "ubuntu" ]]; then
         pkgList+=(python3 python-is-python3)
     else
