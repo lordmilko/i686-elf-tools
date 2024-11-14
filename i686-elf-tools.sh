@@ -138,8 +138,8 @@ function installPackages {
         lzip)
     echoColor "Installing packages"
 
-    # Fix correct python packages on modern Ubuntu versions
-    if [[ $(lsb_release -a) =~ .*"Ubuntu".*$ ]]; then
+    # Fix correct python packages on modern Ubuntu and Ubuntu-based distros
+    if [[ $(lsb_release -a) =~ .*"Ubuntu".*$ || $(cat /etc/os-release) =~ .*(U|u)buntu.*$ || $(apt-cache search --names-only ^python$ | wc -m) -gt 0 ]]; then
         pkgList+=(python3 python-is-python3)
     else
         pkgList+=(python)
