@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # i686-elf-tools.sh
-# v1.3.3
+# v1.3.4
 
 # Define Global Variables
 
